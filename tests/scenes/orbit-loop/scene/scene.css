@@ -1,0 +1,191 @@
+/* v2c-orbit — strict HTML/CSS reconstruction of tests/fixtures/synthetic/clips/orbit-loop.mp4
+   Stage 640x360. Hierarchy: layout (absolute position) > parent motion > local pivot > appearance.
+   All animations start at load; scene time t = animation currentTime. One master period. */
+
+.v2c-orbit {
+  /* runtime controls (see scene.json) */
+  --v2c-orbit-period: 4s;          /* master loop; ring + bars run at period/2 */
+  --v2c-orbit-radius: 112px;       /* orbit radius of the dot */
+  --v2c-orbit-accent: #ff6a49;     /* orbiting dot */
+  --v2c-orbit-ring-color: #4fd1cb; /* pulsing ring stroke */
+  --v2c-orbit-tile-color: #8c7bf6; /* rotating tile */
+  --v2c-orbit-bar-max: 96px;       /* bar peak height */
+  /* fixed measured values */
+  --v2c-orbit-bar-min: 24px;
+  --v2c-orbit-half: calc(var(--v2c-orbit-period) / 2);
+
+  position: relative;
+  overflow: hidden;
+  width: 640px;
+  height: 360px;
+  background: linear-gradient(180deg, #0e1324 0%, #1c2447 100%);
+}
+
+/* ---------- hub: ring + core + orbiting dot, pivot at stage (320,180) ---------- */
+.v2c-orbit .v2c-orbit__hub {
+  position: absolute;
+  left: 320px;
+  top: 180px;
+  width: 0;
+  height: 0;
+}
+
+.v2c-orbit .v2c-orbit__ring {
+  position: absolute;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  width: 135px;
+  height: 135px;
+  border: 6px solid var(--v2c-orbit-ring-color);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  /* outer diameter 135 -> 155 -> 135 px, stroke stays 6 px */
+  animation: v2c-orbit-ring var(--v2c-orbit-half) cubic-bezier(0.37, 0, 0.63, 1) 0s infinite;
+}
+
+.v2c-orbit .v2c-orbit__core {
+  position: absolute;
+  left: -22px;
+  top: -22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #2c3a66;
+}
+
+/* parent motion: constant-speed clockwise rotation about the hub */
+.v2c-orbit .v2c-orbit__arm {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+  animation: v2c-orbit-spin var(--v2c-orbit-period) linear 0s infinite;
+}
+
+.v2c-orbit .v2c-orbit__dot {
+  position: absolute;
+  left: -11px;
+  top: calc(-1 * var(--v2c-orbit-radius) - 11px);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--v2c-orbit-accent);
+}
+
+/* ---------- tile: 56 px rounded square at (120,180), quarter turns each period/4 ---------- */
+.v2c-orbit .v2c-orbit__tile {
+  position: absolute;
+  left: 120px;
+  top: 180px;
+  width: 0;
+  height: 0;
+}
+
+.v2c-orbit .v2c-orbit__tile-spin {
+  position: absolute;
+  left: -28px;
+  top: -28px;
+  width: 56px;
+  height: 56px;
+  transform-origin: 50% 50%; /* tile centre */
+  animation: v2c-orbit-quarter var(--v2c-orbit-period) linear 0s infinite;
+}
+
+.v2c-orbit .v2c-orbit__tile-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: var(--v2c-orbit-tile-color);
+}
+
+/* white marker dot, 12 px, centred 16 px right / 16 px up from tile centre */
+.v2c-orbit .v2c-orbit__tile-face::after {
+  content: "";
+  position: absolute;
+  left: 38px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+/* ---------- bars: 3 x 16 px, pitch 28 px, baseline y=292, staggered pulses ---------- */
+.v2c-orbit .v2c-orbit__bars {
+  position: absolute;
+  left: 492px;
+  top: 292px;
+  width: 72px;
+  height: 0;
+}
+
+.v2c-orbit .v2c-orbit__bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 16px;
+  height: var(--v2c-orbit-bar-min);
+  border-radius: 4px;
+  background: #f6c445;
+  animation: v2c-orbit-bar var(--v2c-orbit-half) linear 0s infinite;
+}
+
+.v2c-orbit .v2c-orbit__bar:nth-child(2) {
+  left: 28px;
+  animation-delay: calc(var(--v2c-orbit-half) * 0.125);
+}
+
+.v2c-orbit .v2c-orbit__bar:nth-child(3) {
+  left: 56px;
+  animation-delay: calc(var(--v2c-orbit-half) * 0.25);
+}
+
+/* ---------- keyframes ---------- */
+@keyframes v2c-orbit-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes v2c-orbit-ring {
+  0%, 100% { width: 135px; height: 135px; }
+  50%      { width: 155px; height: 155px; }
+}
+
+/* each quarter turn: 0.075 of the period (0.3 s at 4 s), ease-in-out quad, then hold */
+@keyframes v2c-orbit-quarter {
+  0%    { transform: rotate(0deg);   animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
+  7.5%  { transform: rotate(90deg);  animation-timing-function: linear; }
+  25%   { transform: rotate(90deg);  animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
+  32.5% { transform: rotate(180deg); animation-timing-function: linear; }
+  50%   { transform: rotate(180deg); animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
+  57.5% { transform: rotate(270deg); animation-timing-function: linear; }
+  75%   { transform: rotate(270deg); animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
+  82.5% { transform: rotate(360deg); animation-timing-function: linear; }
+  100%  { transform: rotate(360deg); }
+}
+
+/* per half-period cycle: rise 22.5% (ease-out cubic), fall to 55% (ease-in cubic), rest */
+@keyframes v2c-orbit-bar {
+  0%   { height: var(--v2c-orbit-bar-min); animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1); }
+  22.5% { height: var(--v2c-orbit-bar-max); animation-timing-function: cubic-bezier(0.32, 0, 0.67, 0); }
+  55%  { height: var(--v2c-orbit-bar-min); }
+  100% { height: var(--v2c-orbit-bar-min); }
+}
+
+/* ---------- reduced motion: static pose of t = 0.5 s ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .v2c-orbit .v2c-orbit__ring,
+  .v2c-orbit .v2c-orbit__arm,
+  .v2c-orbit .v2c-orbit__tile-spin,
+  .v2c-orbit .v2c-orbit__bar {
+    animation: none;
+  }
+  .v2c-orbit .v2c-orbit__ring { width: 145px; height: 145px; }
+  .v2c-orbit .v2c-orbit__arm { transform: rotate(45deg); }
+  .v2c-orbit .v2c-orbit__tile-spin { transform: rotate(90deg); }
+  .v2c-orbit .v2c-orbit__bar:nth-child(1) { height: var(--v2c-orbit-bar-max); }
+  .v2c-orbit .v2c-orbit__bar:nth-child(2) { height: calc(var(--v2c-orbit-bar-min) + 0.91 * (var(--v2c-orbit-bar-max) - var(--v2c-orbit-bar-min))); }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "cube",
+  "title": "Spinning cube (simple 3D loop)",
+  "profile": "strict-css",
+  "synthetic": true,
+  "reference": { "clip": "tests/fixtures/synthetic/clips/cube-3d.mp4" },
+  "stage": { "selector": ".v2c-cube", "width": 640, "height": 360 },
+  "timing": { "duration": 6.0, "loop": true, "offset": 0 },
+  "controls": [
+    { "name": "--v2c-cube-size", "kind": "runtime", "type": "length", "unit": "px",
+      "default": "110px", "range": ["60px", "160px"], "variant": "80px",
+      "description": "cube edge length; cube centre stays at (320px, 164.5px); shadow size is not coupled" },
+    { "name": "--v2c-cube-spin-period", "kind": "runtime", "type": "time", "unit": "s",
+      "default": "6s", "range": ["3s", "12s"], "variant": "4s",
+      "description": "one full Y turn; bob and shadow squash run at period/2 so the loop stays seamless" },
+    { "name": "--v2c-cube-tilt", "kind": "runtime", "type": "angle", "unit": "deg",
+      "default": "20.5deg", "range": ["0deg", "45deg"], "variant": "35deg",
+      "description": "downward viewing tilt (rotateX(-tilt) on the tilt wrapper); larger shows more top face" },
+    { "name": "--v2c-cube-perspective", "kind": "runtime", "type": "length", "unit": "px",
+      "default": "673px", "range": ["350px", "2000px"], "variant": "400px",
+      "description": "CSS perspective distance on the stage (smaller = stronger foreshortening)" },
+    { "name": "--v2c-cube-bob", "kind": "runtime", "type": "length", "unit": "px",
+      "default": "14px", "range": ["0px", "40px"], "variant": "24px",
+      "description": "vertical bob rise height (shadow squash amount is fixed at scaleX 0.846)" },
+    { "name": "--v2c-cube-front", "kind": "runtime", "type": "color",
+      "default": "#e74f5b", "range": null, "variant": "#7cf29a",
+      "description": "front face colour (left/back/right/top/bottom are --v2c-cube-left/-back/-right/-top/-bottom)" }
+  ],
+  "tracks": [
+    { "part": "face-front", "selector": ".v2c-cube__face--front", "color": "#e74f5b", "tolerance": 40, "roi": [200, 60, 240, 200] },
+    { "part": "face-left", "selector": ".v2c-cube__face--left", "color": "#4a6fe4", "tolerance": 40, "roi": [200, 60, 240, 200] },
+    { "part": "face-back", "selector": ".v2c-cube__face--back", "color": "#13b1aa", "tolerance": 40, "roi": [200, 60, 240, 200] },
+    { "part": "face-right", "selector": ".v2c-cube__face--right", "color": "#f9d46d", "tolerance": 40, "roi": [200, 60, 240, 200] },
+    { "part": "face-top", "selector": ".v2c-cube__face--top", "color": "#f3ebc0", "tolerance": 40, "roi": [200, 60, 240, 200] },
+    { "part": "shadow", "selector": ".v2c-cube__shadow", "color": "#0a0c10", "tolerance": 4, "roi": [200, 280, 240, 40] }
+  ]
+}

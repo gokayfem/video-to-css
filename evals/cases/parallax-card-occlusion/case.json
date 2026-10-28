@@ -1,0 +1,83 @@
+{
+  "id": "parallax-card-occlusion",
+  "status": "UNRUN",
+  "kind": "positive",
+  "title": "Parallax card with occlusion",
+  "reference": {
+    "required": true,
+    "clip": null,
+    "source": "external preferred (UI motion capture); synthetic acceptable if labelled",
+    "duration_s": 4,
+    "loop": true,
+    "size": [
+      640,
+      360
+    ],
+    "fps": 30,
+    "description": "A rounded card with three depth layers (background shape, mid object, foreground badge) sliding horizontally at different rates. The mid object passes behind the foreground badge and is partly hidden for about 1 s per loop."
+  },
+  "held_tracks": "evaluator declares tracks for the mid object and the foreground badge; the mid-object track must show reduced visible area during occlusion",
+  "budget": {
+    "wall_time_min": 45,
+    "tool_calls": 180,
+    "tokens": 450000,
+    "applies_to": "both arms identically"
+  },
+  "graders": [
+    {
+      "id": "structural",
+      "type": "harness",
+      "arm": "both",
+      "outcome": "structural",
+      "command": "node skills/video-to-css/scripts/v2css.mjs audit <pkg>",
+      "pass": "exit code 0 and no check with outcome \"fail\""
+    },
+    {
+      "id": "appearance",
+      "type": "harness",
+      "arm": "both",
+      "outcome": "appearance",
+      "command": "node skills/video-to-css/scripts/v2css.mjs compare <pkg>",
+      "pass": "every gated appearance.* check in compare/candidate/report.json has outcome \"pass\""
+    },
+    {
+      "id": "temporal",
+      "type": "harness",
+      "arm": "both",
+      "outcome": "temporal",
+      "command": "node skills/video-to-css/scripts/v2css.mjs compare <pkg>",
+      "pass": "every gated temporal.* check passes for every grader-held track (same report as appearance)"
+    },
+    {
+      "id": "editability",
+      "type": "harness",
+      "arm": "both",
+      "outcome": "editability",
+      "command": "node skills/video-to-css/scripts/v2css.mjs variants <pkg>",
+      "pass": "exit code 0; at least 2 declared controls render visibly distinct variants; multi-instance host renders every instance"
+    },
+    {
+      "id": "visual-review",
+      "type": "review",
+      "arm": "both",
+      "outcome": "review",
+      "rubric": "graders/visual-review.md",
+      "pass": "zero major findings (at most three findings recorded)",
+      "focus": "relative layer rates, correct stacking during occlusion, no layer popping at the seam"
+    },
+    {
+      "id": "skill-fired",
+      "type": "process",
+      "arm": "with-only",
+      "check": "transcript shows the video-to-css skill was invoked",
+      "pass": "recorded only; excluded from comparison"
+    },
+    {
+      "id": "ran-toolkit",
+      "type": "process",
+      "arm": "with-only",
+      "check": "transcript shows the author ran v2css compare or v2css check on its own scene",
+      "pass": "recorded only; excluded from comparison"
+    }
+  ]
+}

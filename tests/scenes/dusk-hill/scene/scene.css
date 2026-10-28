@@ -1,0 +1,218 @@
+/* v2c-dusk — strict HTML/CSS reconstruction of tests/fixtures/synthetic/clips/dusk-hill.mp4
+   Stage 640x360. One-shot (5 s) with final hold. Scene time t = animation currentTime.
+   Paint order (back to front): sky > sun > dusk overlay > far hill > near hill > windmill > bird.
+   The sun is hidden by the far hill purely through layering (no cut-outs). */
+
+.v2c-dusk {
+  /* runtime controls (see scene.json) */
+  --v2c-dusk-time-scale: 1;              /* multiplies every duration and delay */
+  --v2c-dusk-sky-top: rgb(59 74 139);     /* sky colour at y=0 */
+  --v2c-dusk-sky-horizon: rgb(242 165 91); /* sky colour extrapolated to y=360 */
+  --v2c-dusk-dusk-strength: 0.5;          /* final alpha of the dusk overlay */
+  --v2c-dusk-sail-spin: 540deg;           /* total clockwise sail rotation */
+  --v2c-dusk-bird-bob: 10px;              /* bird vertical bob amplitude */
+
+  /* fixed palette (measured) */
+  --v2c-dusk-sun: rgb(254 210 122);
+  --v2c-dusk-hill-back: rgb(92 74 122);
+  --v2c-dusk-hill-front: rgb(47 58 92);
+  --v2c-dusk-tower: rgb(232 225 206);
+  --v2c-dusk-sail: rgb(199 193 172);
+  --v2c-dusk-hub: rgb(138 127 108);
+  --v2c-dusk-bird: rgb(27 26 47);
+
+  position: relative;
+  overflow: hidden;
+  width: 640px;
+  height: 360px;
+  contain: layout paint;
+}
+
+.v2c-dusk__sky,
+.v2c-dusk__dusk,
+.v2c-dusk__sun-track,
+.v2c-dusk__hill-back,
+.v2c-dusk__hill-front,
+.v2c-dusk__mill,
+.v2c-dusk__bird {
+  position: absolute;
+}
+
+/* --- sky: linear vertical gradient (measured, rms < 1.5/255 per channel) --- */
+.v2c-dusk__sky {
+  inset: 0;
+  background: linear-gradient(180deg, var(--v2c-dusk-sky-top) 0px, var(--v2c-dusk-sky-horizon) 360px);
+}
+
+/* --- sun: layout wrapper (motion) > disc (appearance) --- */
+.v2c-dusk__sun-track {
+  left: 385.5px;
+  top: 75.5px;
+  width: 68px;
+  height: 68px;
+  animation: v2c-dusk-sunset calc(4.1s * var(--v2c-dusk-time-scale))
+    cubic-bezier(0.507, 0.055, 0.573, 0.891) both;
+}
+.v2c-dusk__sun {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--v2c-dusk-sun);
+}
+@keyframes v2c-dusk-sunset {
+  from { transform: translateY(0); }
+  to   { transform: translateY(147.3px); }
+}
+
+/* --- dusk overlay: darkens sky + sun only (hills/mill/bird keep their colour) --- */
+.v2c-dusk__dusk {
+  inset: 0;
+  background: rgb(21 27 54 / var(--v2c-dusk-dusk-strength));
+  animation: v2c-dusk-dusk calc(3.35s * var(--v2c-dusk-time-scale))
+    cubic-bezier(0.531, 0.061, 0.904, 0.834) calc(1.15s * var(--v2c-dusk-time-scale)) both;
+}
+@keyframes v2c-dusk-dusk {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* --- hills: large ellipses, ridge read from frame 0 --- */
+.v2c-dusk__hill-back {          /* centre (429.5, 386.9), radii 396.4 x 166.7 (fitted) */
+  left: 33.1px;
+  top: 220.2px;
+  width: 792.8px;
+  height: 333.4px;
+  border-radius: 50%;
+  background: var(--v2c-dusk-hill-back);
+}
+.v2c-dusk__hill-front {         /* centre (150.8, 379.5), radii 317.9 x 119.4 (fitted) */
+  left: -167.1px;
+  top: 260.1px;
+  width: 635.8px;
+  height: 238.8px;
+  border-radius: 50%;
+  background: var(--v2c-dusk-hill-front);
+}
+
+/* --- windmill: layout box at the hub (170,192) --- */
+.v2c-dusk__mill {
+  left: 170px;
+  top: 192px;
+  width: 0;
+  height: 0;
+}
+.v2c-dusk__tower {             /* trapezoid y 190..268, 13px wide at top, 27px at base */
+  position: absolute;
+  left: -13.5px;
+  top: -2px;
+  width: 27px;
+  height: 78px;
+  background: var(--v2c-dusk-tower);
+  clip-path: polygon(7px 0, 20px 0, 100% 100%, 0 100%);
+}
+.v2c-dusk__rotor {             /* pivot = hub centre */
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+  animation: v2c-dusk-spin calc(4.5s * var(--v2c-dusk-time-scale))
+    cubic-bezier(0.3333, 0.6667, 0.6667, 1) both;  /* exact quadratic ease-out */
+}
+.v2c-dusk__blade {
+  position: absolute;
+  left: -70px;
+  top: -6px;
+  width: 140px;
+  height: 12px;
+  border-radius: 6px;
+  background: var(--v2c-dusk-sail);
+}
+.v2c-dusk__blade--v { transform: rotate(90deg); }
+.v2c-dusk__hub {
+  position: absolute;
+  left: -6px;
+  top: -6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--v2c-dusk-hub);
+}
+@keyframes v2c-dusk-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(var(--v2c-dusk-sail-spin)); }
+}
+
+/* --- bird: path (translateX) > bob (translateY) > wings (flap about the body vertex) --- */
+.v2c-dusk__bird {
+  left: 0;
+  top: 119.5px;
+  width: 0;
+  height: 0;
+  animation: v2c-dusk-fly calc(5s * var(--v2c-dusk-time-scale)) linear both;
+}
+.v2c-dusk__bird-bob {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  animation: v2c-dusk-bob calc(0.4s * var(--v2c-dusk-time-scale))
+    cubic-bezier(0.37, 0, 0.63, 1) calc(-0.5s * var(--v2c-dusk-time-scale)) infinite alternate both;
+}
+.v2c-dusk__wing {
+  position: absolute;
+  top: -1.75px;
+  width: 15px;
+  height: 3.5px;
+  border-radius: 1.75px;
+  background: var(--v2c-dusk-bird);
+}
+.v2c-dusk__wing--l {
+  left: -15px;
+  transform-origin: 100% 50%;
+  animation: v2c-dusk-flap-l calc(0.2s * var(--v2c-dusk-time-scale))
+    cubic-bezier(0.37, 0, 0.63, 1) calc(-0.1s * var(--v2c-dusk-time-scale)) infinite alternate both;
+}
+.v2c-dusk__wing--r {
+  left: 0;
+  transform-origin: 0 50%;
+  animation: v2c-dusk-flap-r calc(0.2s * var(--v2c-dusk-time-scale))
+    cubic-bezier(0.37, 0, 0.63, 1) calc(-0.1s * var(--v2c-dusk-time-scale)) infinite alternate both;
+}
+@keyframes v2c-dusk-fly {
+  from { transform: translateX(-116.9px); }
+  to   { transform: translateX(854.1px); }
+}
+@keyframes v2c-dusk-bob {
+  from { transform: translateY(calc(-1 * var(--v2c-dusk-bird-bob))); }
+  to   { transform: translateY(var(--v2c-dusk-bird-bob)); }
+}
+@keyframes v2c-dusk-flap-l {
+  from { transform: rotate(12deg); }
+  to   { transform: rotate(44deg); }
+}
+@keyframes v2c-dusk-flap-r {
+  from { transform: rotate(-12deg); }
+  to   { transform: rotate(-44deg); }
+}
+
+/* --- reduced motion: static pose of t = 2.0 s --- */
+@media (prefers-reduced-motion: reduce) {
+  .v2c-dusk__sun-track,
+  .v2c-dusk__dusk,
+  .v2c-dusk__rotor,
+  .v2c-dusk__bird,
+  .v2c-dusk__bird-bob,
+  .v2c-dusk__wing {
+    animation: none;
+  }
+  .v2c-dusk__sun-track { transform: translateY(60px); }
+  .v2c-dusk__dusk { opacity: 0.09; }
+  .v2c-dusk__rotor { transform: rotate(14deg); }
+  .v2c-dusk__bird { transform: translateX(271.5px); }
+  .v2c-dusk__bird-bob { transform: translateY(calc(-0.8 * var(--v2c-dusk-bird-bob))); }
+  .v2c-dusk__wing--l { transform: rotate(26deg); }
+  .v2c-dusk__wing--r { transform: rotate(-26deg); }
+}

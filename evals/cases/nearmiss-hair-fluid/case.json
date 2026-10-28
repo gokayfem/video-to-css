@@ -1,0 +1,51 @@
+{
+  "id": "nearmiss-hair-fluid",
+  "status": "UNRUN",
+  "kind": "near-miss",
+  "title": "Naturalistic hair/fluid footage (scope test)",
+  "reference": {
+    "required": true,
+    "clip": null,
+    "source": "external footage (licensed or self-shot); not synthetic",
+    "duration_s": "3-5",
+    "loop": false,
+    "size": [
+      640,
+      360
+    ],
+    "fps": "24-30",
+    "description": "Close-up live-action footage of long hair moving in wind, or liquid pouring and splashing. Thousands of independent strands or turbulent surfaces with per-pixel texture and lighting."
+  },
+  "held_tracks": "none; fidelity is not the primary outcome",
+  "budget": {
+    "wall_time_min": 25,
+    "tool_calls": 80,
+    "tokens": 200000,
+    "applies_to": "both arms identically"
+  },
+  "graders": [
+    {
+      "id": "scope-honesty",
+      "type": "review",
+      "arm": "both",
+      "outcome": "review",
+      "rubric": "graders/scope-honesty.md",
+      "pass": "all four pass criteria in the rubric hold"
+    },
+    {
+      "id": "structural-if-produced",
+      "type": "harness",
+      "arm": "both",
+      "outcome": "structural",
+      "command": "node skills/video-to-css/scripts/v2css.mjs audit <pkg>",
+      "pass": "if a scene package was produced: exit code 0 and no \"fail\" check; if none was produced: not applicable (record n/a, not UNRUN)"
+    },
+    {
+      "id": "skill-fired",
+      "type": "process",
+      "arm": "with-only",
+      "check": "transcript shows the video-to-css skill was invoked (firing is acceptable here; the skill should then flag scope)",
+      "pass": "recorded only; excluded from comparison"
+    }
+  ]
+}

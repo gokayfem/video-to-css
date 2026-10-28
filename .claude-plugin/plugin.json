@@ -1,0 +1,22 @@
+{
+  "name": "video-to-css",
+  "displayName": "Video to CSS",
+  "version": "0.1.0",
+  "description": "Turn any reference video into an editable strict HTML/CSS animation: semantic DOM parts, CSS keyframes matched to the clip's real timestamps, runtime custom-property controls, and a browser harness that reports structure, appearance, timing and editability separately.",
+  "author": {
+    "name": "gokayfem",
+    "url": "https://github.com/gokayfem"
+  },
+  "homepage": "https://github.com/gokayfem/video-to-css",
+  "repository": "https://github.com/gokayfem/video-to-css",
+  "license": "MIT",
+  "keywords": [
+    "css",
+    "css-animation",
+    "keyframes",
+    "video-to-css",
+    "playwright",
+    "motion-design",
+    "agent-skills"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "wind",
+  "title": "Wind farm ridge (painted landscape loop)",
+  "profile": "strict-css",
+  "synthetic": false,
+  "provenance": "user-supplied Blender render: Video2Nodes wind-farm/out/loop_720p.mp4 (sha256 a4faf8ff…), itself a procedural reconstruction of a still AI painting; not AI video footage",
+  "reference": { "clip": "fixtures/external/wind-farm/loop_720p.mp4" },
+  "stage": { "selector": ".v2c-wind", "width": 1280, "height": 720 },
+  "timing": { "duration": 10, "loop": true, "offset": 0 },
+  "controls": [
+    { "name": "--v2c-wind-loop", "kind": "runtime", "type": "time", "unit": "s", "default": "10s", "range": ["5s", "30s"], "variant": "20s",
+      "description": "loop length; every motion (rotors, gusts, clouds) scales with it and stays seamless" },
+    { "name": "--v2c-wind-wind", "kind": "runtime", "type": "number", "default": "1", "range": ["0", "2.5"], "variant": "2",
+      "description": "wind strength: grass bend and flower nod amplitude" }
+  ],
+  "tracks": []
+}

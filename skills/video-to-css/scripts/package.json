@@ -1,0 +1,11 @@
+{
+  "name": "video-to-css-toolkit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Skill-local install of the video-to-css toolkit (v2css CLI).",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "bin": { "v2css": "v2css.mjs" },
+  "dependencies": { "playwright": "1.64.1", "pngjs": "7.0.0" }
+}

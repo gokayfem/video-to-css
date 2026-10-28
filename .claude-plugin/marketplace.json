@@ -1,0 +1,23 @@
+{
+  "name": "video-to-css",
+  "description": "Turn videos into editable, verified HTML/CSS animations with coding agents",
+  "owner": {
+    "name": "gokayfem",
+    "url": "https://github.com/gokayfem"
+  },
+  "plugins": [
+    {
+      "name": "video-to-css",
+      "source": "./",
+      "description": "Strict HTML/CSS scenes rebuilt from a reference clip, with timestamp-exact browser comparison, negative controls and runtime controls",
+      "category": "development",
+      "tags": [
+        "css",
+        "animation",
+        "keyframes",
+        "playwright",
+        "video"
+      ]
+    }
+  ]
+}

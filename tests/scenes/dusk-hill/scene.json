@@ -1,0 +1,34 @@
+{
+  "id": "dusk",
+  "title": "Dusk hill: windmill, setting sun and passing bird (layered one-shot)",
+  "profile": "strict-css",
+  "synthetic": true,
+  "reference": { "clip": "tests/fixtures/synthetic/clips/dusk-hill.mp4" },
+  "stage": { "selector": ".v2c-dusk", "width": 640, "height": 360 },
+  "timing": { "duration": 5.0, "loop": false, "offset": 0 },
+  "controls": [
+    { "name": "--v2c-dusk-time-scale", "kind": "runtime", "type": "number", "unit": "",
+      "default": "1", "range": ["0.5", "2"], "variant": "1.5",
+      "description": "multiplies every animation duration and delay (1 = reference timing)" },
+    { "name": "--v2c-dusk-sky-top", "kind": "runtime", "type": "color",
+      "default": "rgb(59 74 139)", "range": null, "variant": "#1d2b5e",
+      "description": "sky gradient colour at the top edge (y = 0)" },
+    { "name": "--v2c-dusk-sky-horizon", "kind": "runtime", "type": "color",
+      "default": "rgb(242 165 91)", "range": null, "variant": "#ff7a59",
+      "description": "sky gradient colour extrapolated to the stage bottom (y = 360); horizon glow" },
+    { "name": "--v2c-dusk-dusk-strength", "kind": "runtime", "type": "number", "unit": "",
+      "default": "0.5", "range": ["0", "0.9"], "variant": "0.75",
+      "description": "final alpha of the navy dusk overlay over sky and sun" },
+    { "name": "--v2c-dusk-sail-spin", "kind": "runtime", "type": "angle", "unit": "deg",
+      "default": "540deg", "range": ["90deg", "1440deg"], "variant": "900deg",
+      "description": "total clockwise sail rotation before the stop (use multiples of 90deg for an upright final cross)" },
+    { "name": "--v2c-dusk-bird-bob", "kind": "runtime", "type": "length", "unit": "px",
+      "default": "10px", "range": ["0px", "30px"], "variant": "20px",
+      "description": "bird vertical bob amplitude (half peak-to-peak)" }
+  ],
+  "tracks": [
+    { "part": "sun", "selector": ".v2c-dusk__sun", "color": "#fed27a", "tolerance": 60, "roi": [370, 60, 100, 170] },
+    { "part": "bird", "selector": ".v2c-dusk__bird", "color": "#1b1a2f", "tolerance": 40, "roi": [0, 90, 640, 55] },
+    { "part": "sails-right-half", "selector": ".v2c-dusk__rotor", "color": "#c7c1ac", "tolerance": 20, "roi": [177, 116, 70, 152] }
+  ]
+}

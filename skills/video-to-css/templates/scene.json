@@ -1,0 +1,16 @@
+{
+  "id": "ID",
+  "title": "TITLE",
+  "profile": "strict-css",
+  "synthetic": false,
+  "reference": { "clip": "path/to/clip.mp4" },
+  "stage": { "selector": ".v2c-ID", "width": 640, "height": 360 },
+  "timing": { "duration": 4, "loop": true, "offset": 0 },
+  "controls": [
+    { "name": "--v2c-ID-loop", "kind": "runtime", "type": "time", "unit": "s", "default": "4s", "range": ["2s", "8s"], "variant": "6s", "description": "loop length" },
+    { "name": "--v2c-ID-accent", "kind": "runtime", "type": "color", "default": "#ff6b4a", "range": null, "variant": "#7cf29a", "description": "part colour" }
+  ],
+  "tracks": [
+    { "part": "shape", "selector": ".v2c-ID__part-shape", "color": "#ff6b4a", "tolerance": 60, "roi": [0, 0, 640, 360] }
+  ]
+}

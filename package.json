@@ -1,0 +1,33 @@
+{
+  "name": "video-to-css",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Turn any reference video into an editable strict HTML/CSS animation, with a timestamp-exact browser comparison harness.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "v2css": "skills/video-to-css/scripts/v2css.mjs"
+  },
+  "scripts": {
+    "setup": "npm ci && npx playwright install chromium webkit",
+    "v2css": "node skills/video-to-css/scripts/v2css.mjs",
+    "build:wind": "node examples/wind-farm/build/build.mjs",
+    "check:wind": "node skills/video-to-css/scripts/v2css.mjs check examples/wind-farm --quick",
+    "test": "node --test tests/",
+    "test:evals": "node evals/check-evals.mjs",
+    "check:calibration": "for e in tests/scenes/orbit-loop tests/scenes/dusk-hill tests/scenes/cube-3d; do node skills/video-to-css/scripts/v2css.mjs check $e || exit 1; done",
+    "fixtures:synthetic": "node tests/fixtures/synthetic/generator/clips.mjs all"
+  },
+  "dependencies": {
+    "playwright": "1.64.1",
+    "pngjs": "7.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gokayfem/video-to-css.git"
+  },
+  "homepage": "https://github.com/gokayfem/video-to-css"
+}

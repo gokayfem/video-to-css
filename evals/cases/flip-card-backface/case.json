@@ -1,0 +1,83 @@
+{
+  "id": "flip-card-backface",
+  "status": "UNRUN",
+  "kind": "positive",
+  "title": "3D flip card with backface",
+  "reference": {
+    "required": true,
+    "clip": null,
+    "source": "synthetic or external",
+    "duration_s": 3,
+    "loop": false,
+    "size": [
+      640,
+      360
+    ],
+    "fps": 30,
+    "description": "A card centred on stage, front face one colour with a simple glyph, back face a contrasting colour. Holds 0.5 s, flips 180 degrees about its vertical axis over 1.2 s with perspective foreshortening and an overshoot ease, then holds on the back face. The front must never show through the back."
+  },
+  "held_tracks": "evaluator declares tracks for the front-face colour and the back-face colour; visibility must swap at the 90-degree point",
+  "budget": {
+    "wall_time_min": 40,
+    "tool_calls": 150,
+    "tokens": 400000,
+    "applies_to": "both arms identically"
+  },
+  "graders": [
+    {
+      "id": "structural",
+      "type": "harness",
+      "arm": "both",
+      "outcome": "structural",
+      "command": "node skills/video-to-css/scripts/v2css.mjs audit <pkg>",
+      "pass": "exit code 0 and no check with outcome \"fail\""
+    },
+    {
+      "id": "appearance",
+      "type": "harness",
+      "arm": "both",
+      "outcome": "appearance",
+      "command": "node skills/video-to-css/scripts/v2css.mjs compare <pkg>",
+      "pass": "every gated appearance.* check in compare/candidate/report.json has outcome \"pass\""
+    },
+    {
+      "id": "temporal",
+      "type": "harness",
+      "arm": "both",
+      "outcome": "temporal",
+      "command": "node skills/video-to-css/scripts/v2css.mjs compare <pkg>",
+      "pass": "every gated temporal.* check passes for every grader-held track (same report as appearance)"
+    },
+    {
+      "id": "editability",
+      "type": "harness",
+      "arm": "both",
+      "outcome": "editability",
+      "command": "node skills/video-to-css/scripts/v2css.mjs variants <pkg>",
+      "pass": "exit code 0; at least 2 declared controls render visibly distinct variants; multi-instance host renders every instance"
+    },
+    {
+      "id": "visual-review",
+      "type": "review",
+      "arm": "both",
+      "outcome": "review",
+      "rubric": "graders/visual-review.md",
+      "pass": "zero major findings (at most three findings recorded)",
+      "focus": "pivot location, perspective strength, backface hidden, timing of the face swap, final hold"
+    },
+    {
+      "id": "skill-fired",
+      "type": "process",
+      "arm": "with-only",
+      "check": "transcript shows the video-to-css skill was invoked",
+      "pass": "recorded only; excluded from comparison"
+    },
+    {
+      "id": "ran-toolkit",
+      "type": "process",
+      "arm": "with-only",
+      "check": "transcript shows the author ran v2css compare or v2css check on its own scene",
+      "pass": "recorded only; excluded from comparison"
+    }
+  ]
+}

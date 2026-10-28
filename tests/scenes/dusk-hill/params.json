@@ -1,0 +1,51 @@
+{
+  "_meta": { "source": "tests/fixtures/synthetic/clips/dusk-hill.mp4", "sha256": "ed158ebb5c1e836234fb05faae8e78798842727a3fa02eb92de3965b3891267e", "units": "px, s, deg", "labels": "measured|estimated|chosen|fitted", "timebase": "1/90000, VFR: 30 fps except 24 fps for PTS 2.0-3.5 s; all times are frame PTS (best_effort_timestamp_time)" },
+  "stage.size": { "value": [640, 360], "unit": "px", "label": "measured", "how": "ffprobe", "confidence": "high" },
+  "clip.duration": { "value": 5.0, "unit": "s", "label": "measured", "how": "ffprobe, 141 frames, last PTS 4.966667", "confidence": "high" },
+
+  "sky.top": { "value": [59, 74, 139], "unit": "rgb", "label": "fitted", "how": "per-channel linear regression of colour vs y, x=10, y 0-214, frame PTS 0", "confidence": "high" },
+  "sky.at360": { "value": [242, 165, 91], "unit": "rgb", "label": "fitted", "how": "same regression extrapolated to y=360 (hills hide y>~220)", "confidence": "medium" },
+  "sky.horizontal_variation": { "value": 0, "unit": "rgb", "label": "measured", "how": "x=20 vs x=620 columns equal within 2 levels", "confidence": "high" },
+
+  "dusk.color": { "value": [21, 27, 54], "unit": "rgb", "label": "fitted", "how": "regress last-frame sky vs first-frame sky per channel (end = (1-a)*start + a*C), 6 columns x 215 rows; rms 0.6-1.2", "confidence": "medium" },
+  "dusk.alpha": { "value": 0.5, "unit": "", "label": "fitted", "how": "same regression, per-channel 0.476-0.504", "confidence": "high" },
+  "dusk.covers": { "value": "sky + sun only", "label": "measured", "how": "hill, tower and hub colours identical in first and last frame; sun colour dims along the same overlay line (254,210,122 -> 217,179,111 at k=0.327)", "confidence": "high" },
+  "dusk.start": { "value": 1.15, "unit": "s", "label": "fitted", "how": "blend factor k(t) of sky column vs endpoints, all 141 frames", "confidence": "medium" },
+  "dusk.duration": { "value": 3.35, "unit": "s", "label": "fitted", "how": "same fit; ends at 4.50 s", "confidence": "medium" },
+  "dusk.easing": { "value": "cubic-bezier(0.531, 0.061, 0.904, 0.834)", "label": "fitted", "how": "random local search on k(t), rms 0.0097", "confidence": "medium" },
+
+  "sun.center0": { "value": [419.5, 109.5], "unit": "px", "label": "measured", "how": "colour-keyed centroid / bbox x 386-453, y 76-143 at PTS 0", "confidence": "high" },
+  "sun.radius": { "value": 34, "unit": "px", "label": "measured", "how": "bbox 68 px", "confidence": "high" },
+  "sun.color": { "value": [254, 210, 122], "unit": "rgb", "label": "measured", "how": "interior pixel, PTS 0", "confidence": "high" },
+  "sun.drop": { "value": 147.3, "unit": "px", "label": "fitted", "how": "top-edge y vs PTS, frames with visible area > 50 px (PTS 0-2.96); motion after occlusion is unobservable", "confidence": "medium" },
+  "sun.duration": { "value": 4.1, "unit": "s", "label": "fitted", "how": "same fit with start fixed at 0", "confidence": "low" },
+  "sun.easing": { "value": "cubic-bezier(0.507, 0.055, 0.573, 0.891)", "label": "fitted", "how": "rms 0.42 px on top edge; render check: rms 0.62 px, max 1 px", "confidence": "medium" },
+  "sun.horizontal_motion": { "value": 0, "unit": "px", "label": "measured", "how": "centroid x 419.5 +/- 0.05 while unoccluded", "confidence": "high" },
+  "sun.fully_hidden": { "value": 3.25, "unit": "s", "label": "measured", "how": "sun-colour probe (tol 60) area 833 px at PTS 3.167, 4 px at 3.25", "confidence": "high" },
+
+  "hill_back.ellipse": { "value": { "cx": 429.5, "top": 220.2, "rx": 396.4, "ry": 166.7 }, "unit": "px", "label": "fitted", "how": "least squares on first-match edge y every 5 px, x 200-635, rms 0.56 px; top corrected by 0.38 px detector bias measured on a render", "confidence": "medium" },
+  "hill_back.color": { "value": [92, 74, 122], "unit": "rgb", "label": "measured", "how": "constant first to last frame", "confidence": "high" },
+  "hill_front.ellipse": { "value": { "cx": 150.8, "top": 260.1, "rx": 317.9, "ry": 119.4 }, "unit": "px", "label": "fitted", "how": "same method, x 0-465 excluding tower, rms 0.48 px", "confidence": "medium" },
+  "hill_front.color": { "value": [47, 58, 92], "unit": "rgb", "label": "measured", "how": "constant", "confidence": "high" },
+
+  "mill.hub": { "value": [170, 192], "unit": "px", "label": "measured", "how": "hub disc pixels 164-175 horizontally; blade extents 100-239 / 122-261 symmetric about it", "confidence": "high" },
+  "mill.hub_radius": { "value": 6, "unit": "px", "label": "measured", "confidence": "high" },
+  "mill.hub_color": { "value": [138, 127, 108], "unit": "rgb", "label": "measured", "confidence": "high" },
+  "mill.blade": { "value": { "reach": 70, "width": 12, "end_radius": 6 }, "unit": "px", "label": "measured", "how": "row 192 / col 170 / col 130 extents at PTS 0", "confidence": "high" },
+  "mill.blade_color": { "value": [199, 193, 172], "unit": "rgb", "label": "measured", "confidence": "high" },
+  "mill.tower": { "value": { "top_y": 190, "base_y": 268, "top_width": 13, "base_width": 27 }, "unit": "px", "label": "estimated", "how": "row extents 200:163-176, 266:157-182; top hidden behind hub/blades, extrapolated", "confidence": "medium" },
+  "mill.tower_color": { "value": [232, 225, 206], "unit": "rgb", "label": "measured", "confidence": "high" },
+  "mill.spin_total": { "value": 540, "unit": "deg", "label": "measured", "how": "unwrapped 4-fold-symmetric angle from blade pixels on a r=45 circle, every frame; clockwise on screen", "confidence": "high" },
+  "mill.spin_duration": { "value": 4.5, "unit": "s", "label": "fitted", "how": "angle constant (0 mod 90) from PTS 4.5", "confidence": "high" },
+  "mill.spin_easing": { "value": "cubic-bezier(0.3333, 0.6667, 0.6667, 1)", "label": "fitted", "how": "exact quadratic ease-out (initial 240 deg/s, linear deceleration); free fit converged to same values, rms 0.21 deg; render check rms 0.23 deg, max 0.89 deg", "confidence": "high" },
+
+  "bird.color": { "value": [27, 26, 47], "unit": "rgb", "label": "measured", "confidence": "high" },
+  "bird.path": { "value": { "x_at_0": -116.9, "speed": 194.2, "y_center": 119.5 }, "unit": "px, px/s", "label": "fitted", "how": "vertex x linear in PTS 0.70-3.80 (x 18.5 -> 620.5); +0.5 px correction after render compare", "confidence": "high" },
+  "bird.visible": { "value": [0.6, 3.97], "unit": "s", "label": "measured", "how": "first/last frame with bird pixels", "confidence": "high" },
+  "bird.bob": { "value": { "amplitude": 10, "period": 0.8, "lowest_at": 0.7 }, "unit": "px, s", "label": "measured", "how": "vertex y 109.5..129.5, maxima at 0.7, 1.5, 2.29, 3.1", "confidence": "high" },
+  "bird.bob_easing": { "value": "cubic-bezier(0.37, 0, 0.63, 1) alternate", "label": "chosen", "how": "sine-like ease-in-out half cycles; render check vertex y rms 0.5 px", "confidence": "medium" },
+  "bird.wing": { "value": { "length": 15, "thickness": 3.5 }, "unit": "px", "label": "estimated", "how": "span 29 px when flat", "confidence": "medium" },
+  "bird.flap": { "value": { "min_deg": 12, "max_deg": 44, "period": 0.4, "flattest_at": 0.7 }, "unit": "deg, s", "label": "fitted", "how": "apparent tip-vs-vertex angle 8.5..32 deg in the reference; CSS rotation range scaled after render compare so the same measure matches (rms 1.7 deg)", "confidence": "medium" },
+
+  "pose.reduced_motion": { "value": 2.0, "unit": "s", "label": "chosen", "how": "static pose with sun, bird and turning sails all visible" }
+}

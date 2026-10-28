@@ -1,0 +1,13 @@
+node_modules/
+.venv/
+work/
+artifacts/
+test-results/
+playwright-report/
+.env
+.env.*
+!.env.example
+.DS_Store
+
+# user-supplied external clips: provenance tracked, media not committed
+fixtures/external/**/*.mp4

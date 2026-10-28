@@ -1,0 +1,18 @@
+{
+  "_meta": { "source": "fixtures/external/wind-farm/loop_720p.mp4", "sha256": "a4faf8ffdc16b710be088ab2d3001ced709fa9a914f6c42e6fed56194554b9ef", "units": "px (stage = clip), s, deg", "labels": "measured|estimated|chosen|fitted", "more": "build/data/hill.json, build/notes/clouds.md, build/notes/grass.md, REFERENCE.md" },
+  "loop.seconds": { "value": 10, "unit": "s", "label": "measured", "how": "240 frames at 24 fps; seamless per source notes and seam step", "confidence": "high" },
+  "rotor.t1.speed": { "value": 71.94, "unit": "deg/s", "label": "measured", "how": "ring profile minus time-mean, 3-fold circular mean, linear fit (rms 2.1 deg); rendered as 6x120 deg per loop", "confidence": "high" },
+  "rotor.t2.speed": { "value": 83.96, "unit": "deg/s", "label": "measured", "how": "same (rms 2.6 deg); 7x120 deg per loop", "confidence": "high" },
+  "rotor.t3.speed": { "value": 72.01, "unit": "deg/s", "label": "measured", "how": "same (rms 4.5 deg); 6x120 deg per loop", "confidence": "medium" },
+  "rotor.t4t5.speed": { "value": 60, "unit": "deg/s", "label": "chosen", "how": "too small to measure; 5x120 deg per loop", "confidence": "low" },
+  "rotor.t1.hub": { "value": [372, 135], "unit": "px", "label": "measured", "how": "spinner centre on a 2x gridded crop (tips' mean is 7 px off under perspective)", "confidence": "high" },
+  "rotor.t1.tips_t0": { "value": [[410, 59], [261, 98.5], [425, 251]], "unit": "px", "label": "measured", "how": "2x gridded crop, frame 0", "confidence": "high" },
+  "band.bottom.oscillation": { "value": { "amplitude": 4.54, "cyclesPerLoop": 3, "phaseRad": -2.21 }, "unit": "px", "label": "fitted", "how": "Fourier fit of the teal band's lower edge, x 700-1200", "confidence": "medium" },
+  "shoulder.keyframes": { "value": 9, "unit": "samples", "label": "fitted", "how": "band top edge per column every 1.25 s, smoothed", "confidence": "medium" },
+  "clouds.drift.big": { "value": { "ax": 9.61, "ay": 1.11 }, "unit": "px", "label": "measured", "how": "block matching over 20 frames, x = A cos(2 pi t/10 - phi)", "confidence": "medium" },
+  "clouds.billow": { "value": { "wobble": 2.5, "scale": 0.03 }, "unit": "px, fraction", "label": "chosen", "how": "residual motion after drift was contaminated; phases random", "confidence": "low" },
+  "grass.gust": { "value": { "deg": 1.2, "cyclesPerLoop": 2, "phaseVelocity": 250 }, "unit": "deg, -, px/s", "label": "chosen (amplitude) / fitted (phase)", "how": "phase plane fitted by the grass worker; amplitude x3 over its cell-shift fit after visual comparison", "confidence": "medium" },
+  "grass.flutter": { "value": { "deg": 0.35, "cyclesPerLoop": 7 }, "unit": "deg", "label": "chosen", "how": "x2.5 over cell-shift fit", "confidence": "low" },
+  "paper.grain": { "value": { "toothOpacity": 0.045, "mottleOpacity": 0.22 }, "unit": "alpha", "label": "fitted", "how": "matched high-frequency luma RMS: sky-top 0.89 vs reference 0.74", "confidence": "medium" },
+  "palette": { "value": { "band": "#007769", "lowerSlope": "#aec404", "upperRight": "#c3d325", "crest": "#73ab33", "cloudLit": "#f4f3e1", "cloudShade": "#add5f3" }, "unit": "sRGB", "label": "measured", "how": "loop-mean frame region means / frame-0 lit-shade classes", "confidence": "high" }
+}

@@ -1,0 +1,16 @@
+/* Harness test fixture: timing features with independently computable positions. */
+.v2c-seek { position: relative; width: 400px; height: 200px; background: #000; overflow: hidden; }
+.v2c-seek > i { position: absolute; width: 20px; height: 20px; left: 0; }
+/* A: positive delay, 2 iterations, alternate, fill both */
+.v2c-seek__a { top: 10px; background: #ff0000; animation: v2c-seek-x300 2s linear 0.5s 2 alternate both; }
+/* B: negative delay, cubic-bezier, infinite */
+.v2c-seek__b { top: 50px; background: #0000ff; animation: v2c-seek-x300 1s cubic-bezier(0.42, 0, 0.58, 1) -0.75s infinite; }
+/* C: steps(4, end), infinite */
+.v2c-seek__c { top: 90px; background: #00ff00; animation: v2c-seek-x200 2s steps(4, end) infinite; }
+/* D: pseudo-element, reverse direction, delay, fill forwards */
+.v2c-seek > .v2c-seek__d { top: 0; left: 360px; width: 40px; height: 200px; }
+.v2c-seek__d::after { content: ""; position: absolute; left: 10px; top: 0; width: 20px; height: 20px; background: #ffff00;
+  animation: v2c-seek-y100 1s linear 0.2s 1 reverse forwards; }
+@keyframes v2c-seek-x300 { from { transform: translateX(0); } to { transform: translateX(300px); } }
+@keyframes v2c-seek-x200 { from { transform: translateX(0); } to { transform: translateX(200px); } }
+@keyframes v2c-seek-y100 { from { transform: translateY(0); } to { transform: translateY(100px); } }

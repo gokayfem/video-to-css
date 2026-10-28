@@ -1,0 +1,5 @@
+{
+  "name": "video-to-css",
+  "version": "0.1.0",
+  "description": "Turn any reference video into an editable strict HTML/CSS animation, with a timestamp-exact browser comparison harness, negative controls and runtime controls."
+}

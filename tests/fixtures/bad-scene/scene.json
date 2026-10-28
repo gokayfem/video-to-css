@@ -1,0 +1,11 @@
+{
+  "id": "bad",
+  "title": "Audit fixture with deliberate strict-profile violations (not a reconstruction)",
+  "profile": "strict-css",
+  "synthetic": true,
+  "reference": null,
+  "stage": { "selector": ".v2c-bad", "width": 200, "height": 100 },
+  "timing": { "duration": 1, "loop": true, "offset": 0 },
+  "controls": [],
+  "tracks": []
+}

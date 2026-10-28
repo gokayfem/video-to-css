@@ -1,0 +1,105 @@
+/* v2c-cube: spinning cube, strict-css profile. Stage 640x360.
+   Transform hierarchy: root (perspective) > __bob (layout + vertical bob)
+   > __tilt (static rotateX) > __spin (rotateY loop) > __face (placement on cube). */
+.v2c-cube {
+  /* runtime controls */
+  --v2c-cube-size: 110px;          /* cube edge length */
+  --v2c-cube-spin-period: 6s;      /* one full turn; bob runs at half this period */
+  --v2c-cube-tilt: 20.5deg;        /* downward viewing tilt (top face visibility) */
+  --v2c-cube-perspective: 673px;   /* CSS perspective distance */
+  --v2c-cube-bob: 14px;            /* bob rise height */
+  --v2c-cube-front: #e74f5b;       /* front face colour */
+  /* palette (internal, editable) */
+  --v2c-cube-left: #4a6fe4;
+  --v2c-cube-back: #13b1aa;
+  --v2c-cube-right: #f9d46d;
+  --v2c-cube-top: #f3ebc0;
+  --v2c-cube-bottom: #8a8f9c;
+  --v2c-cube-shadow: #0a0c10;
+
+  position: relative;
+  overflow: hidden;
+  width: 640px;
+  height: 360px;
+  background: linear-gradient(180deg, #1b1f2a 0%, #0c1016 100%);
+  perspective: var(--v2c-cube-perspective);
+  perspective-origin: 320px 157.5px;
+}
+
+.v2c-cube__shadow {
+  position: absolute;
+  left: 229px;            /* centre x 320, width 182 */
+  top: 285.5px;           /* centre y 299.5, height 28 */
+  width: 182px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--v2c-cube-shadow);
+  transform-origin: 50% 50%;
+  animation: v2c-cube-squash calc(var(--v2c-cube-spin-period) / 2) cubic-bezier(0.37, 0, 0.63, 1) infinite;
+}
+
+.v2c-cube__bob {
+  position: absolute;
+  /* cube centre at rest (lowest point) = (320px, 164.5px) */
+  left: calc(320px - var(--v2c-cube-size) / 2);
+  top: calc(164.5px - var(--v2c-cube-size) / 2);
+  width: var(--v2c-cube-size);
+  height: var(--v2c-cube-size);
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+  animation: v2c-cube-bob calc(var(--v2c-cube-spin-period) / 2) cubic-bezier(0.37, 0, 0.63, 1) infinite;
+}
+
+.v2c-cube__tilt,
+.v2c-cube__spin {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+}
+
+.v2c-cube__tilt {
+  transform: rotateX(calc(-1 * var(--v2c-cube-tilt)));
+}
+
+.v2c-cube__spin {
+  animation: v2c-cube-spin var(--v2c-cube-spin-period) linear infinite;
+}
+
+.v2c-cube__face {
+  position: absolute;
+  inset: 0;
+  display: block;
+  backface-visibility: hidden;
+  transform-origin: 50% 50%;
+}
+
+.v2c-cube__face--front  { background: var(--v2c-cube-front);  transform: translateZ(calc(var(--v2c-cube-size) / 2)); }
+.v2c-cube__face--left   { background: var(--v2c-cube-left);   transform: rotateY(-90deg) translateZ(calc(var(--v2c-cube-size) / 2)); }
+.v2c-cube__face--back   { background: var(--v2c-cube-back);   transform: rotateY(180deg) translateZ(calc(var(--v2c-cube-size) / 2)); }
+.v2c-cube__face--right  { background: var(--v2c-cube-right);  transform: rotateY(90deg) translateZ(calc(var(--v2c-cube-size) / 2)); }
+.v2c-cube__face--top    { background: var(--v2c-cube-top);    transform: rotateX(90deg) translateZ(calc(var(--v2c-cube-size) / 2)); }
+.v2c-cube__face--bottom { background: var(--v2c-cube-bottom); transform: rotateX(-90deg) translateZ(calc(var(--v2c-cube-size) / 2)); }
+
+@keyframes v2c-cube-spin {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+
+/* lowest at t=0, highest at half period; sine-like easing on each half */
+@keyframes v2c-cube-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(calc(-1 * var(--v2c-cube-bob))); }
+}
+
+@keyframes v2c-cube-squash {
+  0%, 100% { transform: scaleX(1); }
+  50%      { transform: scaleX(0.846); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2c-cube__shadow,
+  .v2c-cube__bob,
+  .v2c-cube__spin { animation: none; }
+  .v2c-cube__spin { transform: rotateY(30deg); }
+}

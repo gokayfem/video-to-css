@@ -1,0 +1,25 @@
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg && ffmpeg -version | head -1
+      - name: install
+        run: npm ci && npx playwright install --with-deps chromium webkit
+      - name: test
+        run: npm test
+      - name: evals (structure only, not run)
+        run: npm run test:evals

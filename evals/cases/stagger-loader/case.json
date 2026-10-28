@@ -1,0 +1,83 @@
+{
+  "id": "stagger-loader",
+  "status": "UNRUN",
+  "kind": "positive",
+  "title": "Stagger loader loop",
+  "reference": {
+    "required": true,
+    "clip": null,
+    "source": "synthetic or external",
+    "duration_s": 3,
+    "loop": true,
+    "size": [
+      480,
+      270
+    ],
+    "fps": 30,
+    "description": "Five filled dots in a row on a flat dark background. Each dot rises, scales up and returns with an ease-in-out curve; dot k starts 0.12 s after dot k-1. Seamless 3 s loop. Distinct colour per dot."
+  },
+  "held_tracks": "evaluator declares one colour-keyed track per dot from the clip before any run",
+  "budget": {
+    "wall_time_min": 40,
+    "tool_calls": 150,
+    "tokens": 400000,
+    "applies_to": "both arms identically"
+  },
+  "graders": [
+    {
+      "id": "structural",
+      "type": "harness",
+      "arm": "both",
+      "outcome": "structural",
+      "command": "node skills/video-to-css/scripts/v2css.mjs audit <pkg>",
+      "pass": "exit code 0 and no check with outcome \"fail\""
+    },
+    {
+      "id": "appearance",
+      "type": "harness",
+      "arm": "both",
+      "outcome": "appearance",
+      "command": "node skills/video-to-css/scripts/v2css.mjs compare <pkg>",
+      "pass": "every gated appearance.* check in compare/candidate/report.json has outcome \"pass\""
+    },
+    {
+      "id": "temporal",
+      "type": "harness",
+      "arm": "both",
+      "outcome": "temporal",
+      "command": "node skills/video-to-css/scripts/v2css.mjs compare <pkg>",
+      "pass": "every gated temporal.* check passes for every grader-held track (same report as appearance)"
+    },
+    {
+      "id": "editability",
+      "type": "harness",
+      "arm": "both",
+      "outcome": "editability",
+      "command": "node skills/video-to-css/scripts/v2css.mjs variants <pkg>",
+      "pass": "exit code 0; at least 2 declared controls render visibly distinct variants; multi-instance host renders every instance"
+    },
+    {
+      "id": "visual-review",
+      "type": "review",
+      "arm": "both",
+      "outcome": "review",
+      "rubric": "graders/visual-review.md",
+      "pass": "zero major findings (at most three findings recorded)",
+      "focus": "per-dot delay spacing, easing shape, loop seam continuity"
+    },
+    {
+      "id": "skill-fired",
+      "type": "process",
+      "arm": "with-only",
+      "check": "transcript shows the video-to-css skill was invoked",
+      "pass": "recorded only; excluded from comparison"
+    },
+    {
+      "id": "ran-toolkit",
+      "type": "process",
+      "arm": "with-only",
+      "check": "transcript shows the author ran v2css compare or v2css check on its own scene",
+      "pass": "recorded only; excluded from comparison"
+    }
+  ]
+}

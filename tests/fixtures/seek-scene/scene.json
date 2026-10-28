@@ -1,0 +1,16 @@
+{
+  "id": "seek",
+  "title": "Harness seek fixture (not a reconstruction)",
+  "profile": "strict-css",
+  "synthetic": true,
+  "reference": null,
+  "stage": { "selector": ".v2c-seek", "width": 400, "height": 200 },
+  "timing": { "duration": 5, "loop": false, "offset": 0 },
+  "controls": [],
+  "tracks": [
+    { "part": "a", "selector": ".v2c-seek__a", "color": "#ff0000", "tolerance": 60, "roi": [0, 0, 400, 40] },
+    { "part": "b", "selector": ".v2c-seek__b", "color": "#0000ff", "tolerance": 60, "roi": [0, 40, 400, 40] },
+    { "part": "c", "selector": ".v2c-seek__c", "color": "#00ff00", "tolerance": 60, "roi": [0, 80, 400, 40] },
+    { "part": "d", "selector": ".v2c-seek__d", "color": "#ffff00", "tolerance": 60, "roi": [360, 0, 40, 200] }
+  ]
+}

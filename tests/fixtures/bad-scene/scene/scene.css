@@ -1,0 +1,6 @@
+/* Deliberately violates the strict profile; the audit test expects each failure. */
+.v2c-bad { position: relative; width: 200px; height: 100px; background: #123; overflow: hidden; }
+.v2c-bad__a { position: absolute; width: 20px; height: 20px; background: url(data:image/png;base64,iVBORw0KGgo=) #f00; animation: spin 1s linear infinite; }
+@media (min-width: 1px) { .v2c-bad__b { display: block; width: 10px; height: 10px; --stray-prop: 1; mask-image: image-set("x.png" 1x); } }
+div { color: red; }
+@keyframes spin { to { transform: rotate(360deg); } }

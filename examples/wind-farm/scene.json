@@ -1,0 +1,349 @@
+{
+  "id": "wind",
+  "title": "Wind farm ridge (painted landscape loop)",
+  "profile": "strict-css",
+  "synthetic": false,
+  "provenance": "user-supplied Blender render: Video2Nodes wind-farm/out/loop_720p.mp4 (sha256 a4faf8ff…), itself a procedural reconstruction of a still AI painting; not AI video footage",
+  "reference": {
+    "clip": "fixtures/external/wind-farm/loop_720p.mp4"
+  },
+  "stage": {
+    "selector": ".v2c-wind",
+    "width": 1280,
+    "height": 720
+  },
+  "timing": {
+    "duration": 10,
+    "loop": true,
+    "offset": 0
+  },
+  "controls": [
+    {
+      "name": "--v2c-wind-loop",
+      "kind": "runtime",
+      "type": "time",
+      "unit": "s",
+      "default": "10s",
+      "range": [
+        "5s",
+        "30s"
+      ],
+      "variant": "20s",
+      "description": "loop length; every motion (rotors, gusts, clouds) scales with it and stays seamless"
+    },
+    {
+      "name": "--v2c-wind-wind",
+      "kind": "runtime",
+      "type": "number",
+      "default": "1",
+      "range": [
+        "0",
+        "2.5"
+      ],
+      "variant": "2",
+      "description": "wind strength: grass bend and flower nod amplitude"
+    },
+    {
+      "name": "--v2c-wind-sky-top",
+      "kind": "runtime",
+      "type": "color",
+      "default": "#006feb",
+      "range": null,
+      "variant": "#3a2f8f",
+      "description": "zenith sky colour"
+    },
+    {
+      "name": "--v2c-wind-sky-horizon",
+      "kind": "runtime",
+      "type": "color",
+      "default": "#68caf9",
+      "range": null,
+      "variant": "#ffb37a",
+      "description": "sky colour near the horizon"
+    },
+    {
+      "name": "--v2c-wind-clouds-lit",
+      "kind": "runtime",
+      "type": "color",
+      "default": "#f4f3e1",
+      "range": null,
+      "variant": "#ffd2a8",
+      "description": "lit cumulus colour (sunlit lobes); highlights and rims are mixed from it"
+    },
+    {
+      "name": "--v2c-wind-clouds-shade",
+      "kind": "runtime",
+      "type": "color",
+      "default": "#add5f3",
+      "range": null,
+      "variant": "#8f8fc8",
+      "description": "shaded cloud body colour (blue-grey underside)"
+    },
+    {
+      "name": "--v2c-wind-clouds-drift",
+      "kind": "runtime",
+      "type": "number",
+      "default": "1",
+      "range": [
+        "0",
+        "4"
+      ],
+      "variant": "3",
+      "description": "cloud mass drift amplitude multiplier (1 = measured 6–10 px ellipse per loop)"
+    },
+    {
+      "name": "--v2c-wind-clouds-billow",
+      "kind": "runtime",
+      "type": "number",
+      "default": "1",
+      "range": [
+        "0",
+        "4"
+      ],
+      "variant": "3",
+      "description": "lobe billow multiplier (per-lobe wobble and swell)"
+    },
+    {
+      "name": "--v2c-wind-turbines-body",
+      "kind": "runtime",
+      "type": "color",
+      "default": "#eef2f6",
+      "range": null,
+      "variant": "#ff7a59",
+      "description": "turbine paint (lit)"
+    },
+    {
+      "name": "--v2c-wind-turbines-shade",
+      "kind": "runtime",
+      "type": "color",
+      "default": "#c3d0de",
+      "range": null,
+      "variant": "#8a3a2a",
+      "description": "turbine paint (shaded side)"
+    },
+    {
+      "name": "--v2c-wind-hill-lit",
+      "kind": "runtime",
+      "type": "color",
+      "default": "#aec404",
+      "range": null,
+      "variant": "#d9a441",
+      "description": "sunlit lower slope colour"
+    },
+    {
+      "name": "--v2c-wind-hill-shade",
+      "kind": "runtime",
+      "type": "color",
+      "default": "#007769",
+      "range": null,
+      "variant": "#3b3f7a",
+      "description": "cloud-shadow band colour"
+    },
+    {
+      "name": "--v2c-wind-grass-dark",
+      "kind": "runtime",
+      "type": "color",
+      "default": "#3f7130",
+      "range": null,
+      "variant": "#6b4a1f",
+      "description": "grass blade root / shadow-side colour"
+    },
+    {
+      "name": "--v2c-wind-grass-light",
+      "kind": "runtime",
+      "type": "color",
+      "default": "#a8c21e",
+      "range": null,
+      "variant": "#e0d070",
+      "description": "grass blade tip / sunlit colour"
+    },
+    {
+      "name": "--v2c-wind-grass-height",
+      "kind": "runtime",
+      "type": "number",
+      "default": "1",
+      "range": [
+        "0.4",
+        "1.8"
+      ],
+      "variant": "1.5",
+      "description": "grass blade height scale (about each tuft base)"
+    },
+    {
+      "name": "--v2c-wind-flowers-daisy",
+      "kind": "runtime",
+      "type": "color",
+      "default": "#f4f0da",
+      "range": null,
+      "variant": "#ff8fc8",
+      "description": "daisy petal colour"
+    },
+    {
+      "name": "--v2c-wind-flowers-buttercup",
+      "kind": "runtime",
+      "type": "color",
+      "default": "#f2bf08",
+      "range": null,
+      "variant": "#ff5a1f",
+      "description": "buttercup colour"
+    },
+    {
+      "name": "--v2c-wind-flowers-size",
+      "kind": "runtime",
+      "type": "number",
+      "default": "1",
+      "range": [
+        "0.5",
+        "2"
+      ],
+      "variant": "1.8",
+      "description": "flower size (head and stem) about the stem foot"
+    },
+    {
+      "name": "--v2c-wind-paper",
+      "kind": "runtime",
+      "type": "number",
+      "default": "1",
+      "range": [
+        "0",
+        "3"
+      ],
+      "variant": "3",
+      "description": "paper grain strength (tooth + mottle); 0 = clean"
+    }
+  ],
+  "tracks": [
+    {
+      "part": "clouds-tower-top",
+      "selector": ".v2c-wind__clouds-mass--big",
+      "color": "#f4f3e1",
+      "tolerance": 30,
+      "roi": [
+        760,
+        80,
+        340,
+        200
+      ]
+    },
+    {
+      "part": "clouds-right-mass",
+      "selector": ".v2c-wind__clouds-mass--right",
+      "color": "#f4f3e1",
+      "tolerance": 30,
+      "roi": [
+        1100,
+        260,
+        180,
+        230
+      ]
+    },
+    {
+      "part": "clouds-left-bank",
+      "selector": ".v2c-wind__clouds-mass--left",
+      "color": "#f4f3e1",
+      "tolerance": 30,
+      "roi": [
+        0,
+        290,
+        190,
+        85
+      ]
+    },
+    {
+      "part": "rotor-t1",
+      "selector": ".v2c-wind__turbines-t1 .v2c-wind__turbines-spin",
+      "color": "#e8eef4",
+      "tolerance": 45,
+      "roi": [
+        372,
+        20,
+        110,
+        100
+      ]
+    },
+    {
+      "part": "rotor-t2",
+      "selector": ".v2c-wind__turbines-t2 .v2c-wind__turbines-spin",
+      "color": "#e8eef4",
+      "tolerance": 45,
+      "roi": [
+        512,
+        225,
+        50,
+        50
+      ]
+    },
+    {
+      "part": "shadow-shoulder",
+      "selector": ".v2c-wind__hill-shoulder",
+      "color": "#007769",
+      "tolerance": 40,
+      "roi": [
+        0,
+        380,
+        330,
+        120
+      ]
+    },
+    {
+      "part": "grass-bank-top",
+      "selector": ".v2c-wind__grass-t",
+      "color": "#4c8443",
+      "tolerance": 38,
+      "roi": [
+        180,
+        445,
+        140,
+        45
+      ]
+    },
+    {
+      "part": "grass-bank",
+      "selector": ".v2c-wind__grass-t",
+      "color": "#5c8a2f",
+      "tolerance": 30,
+      "roi": [
+        20,
+        600,
+        360,
+        110
+      ]
+    },
+    {
+      "part": "flowers-daisy-a",
+      "selector": ".v2c-wind__flowers-daisy",
+      "color": "#f0ebd2",
+      "tolerance": 45,
+      "roi": [
+        92,
+        466,
+        46,
+        28
+      ]
+    },
+    {
+      "part": "flowers-daisy-b",
+      "selector": ".v2c-wind__flowers-daisy",
+      "color": "#f0f2dc",
+      "tolerance": 45,
+      "roi": [
+        126,
+        682,
+        48,
+        34
+      ]
+    },
+    {
+      "part": "flowers-buttercup",
+      "selector": ".v2c-wind__flowers-buttercup",
+      "color": "#f1c403",
+      "tolerance": 55,
+      "roi": [
+        336,
+        534,
+        40,
+        32
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+/* video-to-css strict profile template. Replace ID. Stage px = reference px. */
+.v2c-ID {
+  --v2c-ID-loop: 4s;            /* runtime control: loop length */
+  --v2c-ID-accent: #ff6b4a;     /* runtime control: part colour */
+  position: relative; width: 640px; height: 360px; overflow: hidden; background: #101624;
+}
+/* layout > parent motion > local pivot > appearance */
+.v2c-ID .v2c-ID__part { position: absolute; left: 300px; top: 160px; }
+.v2c-ID .v2c-ID__part-pivot { transform-origin: 0 0;
+  animation: v2c-ID-spin var(--v2c-ID-loop) linear infinite; animation-delay: calc(var(--v2c-ID-loop) * -0.25); }
+.v2c-ID .v2c-ID__part-shape { position: absolute; left: 100px; top: -10px; width: 20px; height: 20px;
+  border-radius: 50%; background: var(--v2c-ID-accent); }
+@keyframes v2c-ID-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .v2c-ID *, .v2c-ID *::before, .v2c-ID *::after { animation-play-state: paused !important; }
+}
