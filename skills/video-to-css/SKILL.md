@@ -50,8 +50,11 @@ node v2css.mjs help
    integer divisor of the loop; offsets via negative `animation-delay`.
 5. **Refine with evidence** — `sbs` after every step (reference | scene | diff at chosen times,
    `--crop` for small parts), fix composition and timing before detail, look for causes (pivot,
-   transform order, inheritance of custom properties) rather than compensating offsets.
-   → [references/review.md](references/review.md)
+   transform order, inheritance of custom properties, gaps between layers) rather than compensating
+   offsets. For long work, `freeze` each checkpoint. Compare it with
+   `triptych --prev`, and check motion with `playback`, `jumps` and `frames` (sub-frame).
+   Find a defect's owner with `attribute` before shading over it, and measure edges and lines with
+   `profile`. → [references/review.md](references/review.md), [references/lessons.md](references/lessons.md)
 6. **Verify** — `check <scene-dir>`: strict audit, full compare at every reference frame,
    negative controls, per-animation sensitivity, controls + multi-instance, review page.
    Four outcomes are reported separately: structural, appearance, temporal, editability.

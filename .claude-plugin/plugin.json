@@ -1,7 +1,7 @@
 {
   "name": "video-to-css",
   "displayName": "Video to CSS",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Turn any reference video into an editable strict HTML/CSS animation: semantic DOM parts, CSS keyframes matched to the clip's real timestamps, runtime custom-property controls, and a browser harness that reports structure, appearance, timing and editability separately.",
   "author": {
     "name": "gokayfem",

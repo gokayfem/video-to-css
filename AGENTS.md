@@ -8,10 +8,12 @@ skill rather than develop it, see the README.
 ```text
 skills/video-to-css/          the skill (this is what gets installed)
   SKILL.md                    entry point: workflow, hard rules, reference routing
-  references/                 measuring, CSS primitives, scene contract, review, harness
+  references/                 measuring, CSS primitives, scene contract, review, harness, lessons
   templates/                  scene package template
   scripts/v2css.mjs           CLI: init | inspect | extract | capture | sbs | compare | negatives | audit | variants | perf | review | check
-  scripts/lib/                video decode (PTS, rotation, pixel aspect), browser seek/capture, metrics, gates, audit, controls
+                              iteration: freeze | triptych | frames | jumps | playback | attribute | profile
+  scripts/lib/                video decode (PTS, rotation, pixel aspect), browser seek/capture, metrics, gates, audit, controls,
+                              diagnose.mjs (frozen revisions, matched-time and sub-frame sheets, jumps, playback, attribution, profiles)
 examples/wind-farm/           worked reconstruction: build/parts/*.mjs -> scene/ (generated; edit parts, then npm run build:wind)
 prompts/                      reference-to-css, part contract, visual review, delivery
 tests/                        node:test suites; tests/scenes/ are harness calibration scenes on synthetic clips
@@ -25,7 +27,8 @@ gallery/                      README images (generated from real runs)
 
 ```bash
 npm run setup          # npm ci + Playwright Chromium and WebKit; ffmpeg/ffprobe must be on PATH
-npm test               # seek correctness, determinism, VFR/rotation/pixel-aspect intake, audit, negative controls, embedding
+npm test               # seek correctness, determinism, VFR/rotation/pixel-aspect intake, audit, negative controls, embedding,
+                       # diagnosis tools (freeze integrity, planted-pop detection, attribution, line profiles)
 npm run build:wind     # regenerate examples/wind-farm/scene from its parts
 npm run check:wind     # reference clip: fixtures/external/wind-farm/loop_720p.mp4
 ```
@@ -40,3 +43,6 @@ npm run check:wind     # reference clip: fixtures/external/wind-farm/loop_720p.m
 - Never call a self-made clip an independent benchmark. Report appearance, timing, structure and editability
   separately; never a single "% similarity".
 - Reference clips and their frames never go inside an exported `scene/`.
+- Review evidence comes from a frozen revision (`v2css freeze`), not from live files. Find a defect's owning layer
+  (`v2css attribute`) before shading over it. Check motion between reference frames (`frames`, `jumps`), not only at them.
+  See `skills/video-to-css/references/lessons.md`.

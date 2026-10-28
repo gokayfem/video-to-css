@@ -8,7 +8,7 @@ import { renderSheet } from './sheet.mjs';
 import { ensureDir, pad } from './util.mjs';
 import { readPNG, writePNG } from './png.mjs';
 
-function cropTo(src, dst, [x, y, w, h], zoom = 1) {
+export function cropTo(src, dst, [x, y, w, h], zoom = 1) {
   const im = readPNG(src);
   const out = { width: w * zoom, height: h * zoom, data: new Uint8Array(w * zoom * h * zoom * 4) };
   for (let j = 0; j < h * zoom; j++) for (let i = 0; i < w * zoom; i++) {

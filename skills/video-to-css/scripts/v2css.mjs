@@ -33,6 +33,21 @@ const HELP = `v2css <command> [args]
   check <scene-dir> [--engine e] [--quick]  audit + compare + negatives + sensitivity + variants + review → artifacts/<id>/SUMMARY.md
                                             (--quick skips negatives/sensitivity for large scenes)
 
+ iteration and diagnosis (any scene dir, including a frozen revision):
+  freeze <scene-dir> --rev r3 [--build "<cmd>"]   immutable copy + per-file sha256 → artifacts/<id>/frozen/r3 (with --build:
+                                            build twice, refuse if the output differs); freeze --verify <frozen-dir>
+  triptych <scene-dir> --times a,b [--prev <scene-dir>] [--crop x,y,w,h --zoom 2]
+                                            reference | previous | current at the same PTS and crop
+  frames <scene-dir> --from a --to b [--step 0.008333] [--crop x,y,w,h --zoom z]
+                                            the scene between reference frames (default 1/120 s): flashes, holes, pops
+  jumps <scene-dir> [--crop x,y,w,h]        whole-timeline frame steps, scene vs reference; flags pops the reference lacks
+  playback <scene-dir> [--prev <scene-dir>] [--crop x,y,w,h] [--width 640]
+                                            synchronized side-by-side video at reference PTS (VFR-safe)
+  attribute <scene-dir> --t s --points x,y;x,y [--selector css]
+                                            hide one layer at a time; which layer owns the pixels at those points
+  profile <scene-dir> --t s --line x0,y0,x1,y1 [--prominence 8]
+                                            luma along a line, reference vs scene: transition width, dark lines, halos
+
 Artifacts go to <project>/artifacts/<scene-id>/ (git-ignored).`;
 
 function args(argv) {
@@ -47,6 +62,7 @@ function args(argv) {
 const [cmd, ...rest] = process.argv.slice(2);
 const { pos, opt } = args(rest);
 const engine = opt.engine ?? 'chromium';
+const nums = (s) => String(s).split(',').map(Number);
 const log = (...a) => console.log(...a);
 
 async function main() {
@@ -150,6 +166,70 @@ async function main() {
       const { runCheck } = await import('./lib/checkall.mjs');
       const r = await runCheck(loadScene(pos[0]), { engine, log, negatives: !opt.quick });
       if (!r.ok) process.exitCode = 1;
+      break;
+    }
+    case 'freeze': {
+      const D = await import('./lib/diagnose.mjs');
+      if (opt.verify) {
+        const bad = D.verifyFrozen(resolve(String(opt.verify)));
+        log(bad.length ? `CHANGED since freeze: ${bad.join(', ')}` : 'frozen copy intact (every recorded sha256 matches)');
+        if (bad.length) process.exitCode = 1;
+        break;
+      }
+      D.freezeScene(loadScene(pos[0]), { rev: opt.rev, build: typeof opt.build === 'string' ? opt.build : null, log });
+      break;
+    }
+    case 'triptych': {
+      const D = await import('./lib/diagnose.mjs');
+      const scene = loadScene(pos[0]);
+      const prev = opt.prev ? loadScene(String(opt.prev)) : null;
+      const out = resolve(opt.out ?? join(scene.artifacts, 'triptych.png'));
+      await withSession(engine, (s) => D.triptych(s, scene, { prev, times: nums(opt.times ?? '0'), crop: opt.crop ? nums(opt.crop) : null, zoom: Number(opt.zoom ?? 1), out }), scene.root);
+      log(`triptych: ${out}`);
+      break;
+    }
+    case 'frames': {
+      const D = await import('./lib/diagnose.mjs');
+      const scene = loadScene(pos[0]);
+      const out = resolve(opt.out ?? join(scene.artifacts, `frames-${opt.from}-${opt.to}.png`));
+      const r = await withSession(engine, (s) => D.denseFrames(s, scene, { from: Number(opt.from), to: Number(opt.to), step: Number(opt.step ?? 1 / 120), crop: opt.crop ? nums(opt.crop) : null, zoom: Number(opt.zoom ?? 1), out }), scene.root);
+      log(`frames: ${out} (${r.times.length} captures)`);
+      break;
+    }
+    case 'jumps': {
+      const D = await import('./lib/diagnose.mjs');
+      const scene = loadScene(pos[0]);
+      const r = await withSession(engine, (s) => D.jumps(s, scene, { crop: opt.crop ? nums(opt.crop) : null }), scene.root);
+      writeJSON(join(scene.artifacts, 'jumps.json'), r);
+      log(`crop ${r.crop.join(',')}: median step reference ${r.medianStep.ref}, scene ${r.medianStep.scene}`);
+      log(`flagged (scene step > 3× its median and > 2× the reference's): ${r.flagged.length ? r.flagged.map((f) => `frame ${f.frame} (${f.t}s) ${f.scene} vs ${f.ref}`).join('; ') : 'none'}`);
+      if (r.flagged.length) process.exitCode = 1;
+      break;
+    }
+    case 'playback': {
+      const D = await import('./lib/diagnose.mjs');
+      const scene = loadScene(pos[0]);
+      const prev = opt.prev ? loadScene(String(opt.prev)) : null;
+      const out = resolve(opt.out ?? join(scene.artifacts, 'playback.mp4'));
+      const r = await withSession(engine, (s) => D.playback(s, scene, { prev, crop: opt.crop ? nums(opt.crop) : null, out, width: Number(opt.width ?? 640) }), scene.root);
+      log(`playback: ${out} (${r.columns.join(' | ')}, ${r.frames} frames)`);
+      break;
+    }
+    case 'attribute': {
+      const D = await import('./lib/diagnose.mjs');
+      const scene = loadScene(pos[0]);
+      const points = String(opt.points ?? '').split(';').filter(Boolean).map(nums);
+      if (!points.length || opt.t === undefined) throw new Error('usage: v2css attribute <scene> --t s --points x,y;x,y');
+      const r = await withSession(engine, (s) => D.attribute(s, scene, { t: Number(opt.t), points, selector: opt.selector ?? null }), scene.root);
+      for (const p of r.byPoint) log(`(${p.point}) luma ${p.base}: ${p.owners.length ? p.owners.map((o) => `${o.layer} ${o.delta > 0 ? '+' : ''}${o.delta}`).join(', ') : 'no single layer changes it'}`);
+      break;
+    }
+    case 'profile': {
+      const D = await import('./lib/diagnose.mjs');
+      const scene = loadScene(pos[0]);
+      const r = await withSession(engine, (s) => D.lineProfile(s, scene, { t: Number(opt.t ?? 0), line: nums(opt.line), prominence: Number(opt.prominence ?? 8) }), scene.root);
+      for (const k of ['reference', 'scene']) log(`${k.padEnd(9)} transition ${r[k].transition ?? '—'} px, contrast ${r[k].contrast}, ridges ${r[k].ridges.length ? r[k].ridges.map((x) => `${x.kind}@${x.at}px (${x.prominence})`).join(' ') : 'none'}`);
+      if (opt.out) writeJSON(resolve(opt.out), r);
       break;
     }
     default:

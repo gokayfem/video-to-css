@@ -14,6 +14,13 @@
 | `perf <scene>` | live rAF frame intervals (headless; not on-screen smoothness) |
 | `review <scene>` | local page: decoded frames or `<video>` beside the live scene, one clock, scrub, frame step, controls, keyboard |
 | `check <scene>` | audit + compare + negatives + sensitivity + variants + review → artifacts/<id>/SUMMARY.md |
+| `freeze <scene> --rev rN [--build cmd]` | immutable copy of `scene/` + `scene.json` under artifacts/<id>/frozen/rN with per-file sha256 (`--build`: build twice, refuse if the output differs); `freeze --verify <dir>` re-checks the hashes. A frozen copy is a scene package, so every command works on it |
+| `triptych <scene> --times [--prev dir] [--crop --zoom]` | reference \| previous \| current at the same PTS and crop, labelled with each revision's name and hash |
+| `frames <scene> --from --to [--step]` | the scene at sub-frame times (default 1/120 s) across a transition: flashes, holes, doubled shapes, pops between reference frames |
+| `jumps <scene> [--crop]` | per-frame mean \|Δluma\| over the whole timeline, scene vs reference; flags steps above 3× the scene's median and 2× the reference's step at that frame |
+| `playback <scene> [--prev dir] [--crop] [--width]` | synchronized side-by-side video at reference PTS (concat durations, VFR-safe) |
+| `attribute <scene> --t --points x,y;x,y [--selector]` | hide one layer (default: each child of the stage root) at a time; reports which layer changes each point |
+| `profile <scene> --t --line x0,y0,x1,y1` | luma along a line in reference and render: 10–90 % transition width, dark-line dips and halo peaks by prominence |
 
 Inputs: anything ffmpeg decodes. Frames are extracted at **display** size (what a player shows), so the
 stage must match `stage.width/height` from `init`. RGB/palette sources (GIF) skip the YUV matrix; untagged

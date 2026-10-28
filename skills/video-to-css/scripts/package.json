@@ -1,6 +1,6 @@
 {
   "name": "video-to-css-toolkit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Skill-local install of the video-to-css toolkit (v2css CLI).",

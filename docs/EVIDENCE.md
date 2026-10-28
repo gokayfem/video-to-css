@@ -104,3 +104,24 @@ Changes made after observing failures in that run:
 2. The browser session serves the scene's own project root, not the current directory (a scene outside the
    working directory could not load).
 3. The comparison grid keeps ~144 near-square cells at any aspect (16×9 at 16:9, unchanged for every result above).
+
+## Iteration and diagnosis tools (v0.2.0, 2026-10-28)
+
+Added after a long multi-builder reconstruction of an AI-generated portrait clip (head turn, wind, smile;
+clip and scene not in the repo). Each tool answers a failure that the per-frame `compare` did not catch.
+Covered by `tests/diagnose.test.mjs`. No compare gate changed.
+
+| tool | failure that motivated it | test |
+|---|---|---|
+| `freeze` | review sheets mixed live files that other builders were editing; "before/after" pairs were from different builds | immutable copy, hashes verified, a tampered file reported, the clip resolves from the frozen copy |
+| `triptych --prev` | improvements could not be judged against the previous state at identical PTS and crop | renders reference \| previous \| current |
+| `frames` (1/120 s) | hair sets swapped between two 24 fps samples passed every per-frame check but flashed translucent and popped at sub-frame times | sheet at sub-frame times |
+| `jumps` | a reveal swept from narrow to full width in one frame step (3× the reference's step there); the 120 Hz sheet over the interval looked gradual | a good scene has no flags; a planted `steps(1)` overlay is flagged at its frame |
+| `playback` | stills could not show motion; VFR-safe synchronized video at reference PTS | three-column video, encoded frame count = reference frames ±1 |
+| `attribute` | a dark slit under a jaw was first treated as a shadow problem; hiding layers showed a geometry gap revealing a dark layer behind | the hub layer is named as owner of the ring centre |
+| `profile` | "soft edge" and "no line" claims were judged from enlarged crops; a rim shadow centred inside the contour left a dark line | a 2 px dark line and a 1 px halo found; a clean edge, ±3 noise and fine stripes report none |
+
+Also recorded in `references/lessons.md`:
+- CSS traps: `filter` before `clip-path`; default-rule specificity; anti-aliased base colours.
+- Integration rules: overlap, attribution before shading, measured-edge collapse, one writer per file.
+- Measurement vs acceptance, including the limits of monocular depth/normal estimators on stylised renders.

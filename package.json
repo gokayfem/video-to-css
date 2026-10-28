@@ -1,6 +1,6 @@
 {
   "name": "video-to-css",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Turn any reference video into an editable strict HTML/CSS animation, with a timestamp-exact browser comparison harness.",
   "type": "module",

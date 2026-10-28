@@ -142,8 +142,31 @@ What the commands do:
   sweep, tests the controls and embedding, and writes `artifacts/<id>/SUMMARY.md` and a review page. The review
   page scrubs the reference and the live scene on one clock.
 
+For long reconstructions, the iteration commands keep every review tied to an exact build:
+
+```bash
+node v2css.mjs freeze my-scene --rev r3 --build "npm run build"     # immutable, hashed checkpoint
+node v2css.mjs triptych artifacts/my/frozen/r3 --prev artifacts/my/frozen/r2 --times 0,1,2.5
+node v2css.mjs playback artifacts/my/frozen/r3 --prev artifacts/my/frozen/r2 --crop 400,40,420,520
+node v2css.mjs jumps my-scene          # whole-timeline pops the reference does not have
+node v2css.mjs frames my-scene --from 0.6 --to 1.0      # every 1/120 s across a transition
+node v2css.mjs attribute my-scene --t 1 --points "702,303"   # which layer owns these pixels
+node v2css.mjs profile my-scene --t 2 --line 540,295,600,295 # edge width, dark lines, halos
+```
+
+- `freeze` copies `scene/` and `scene.json` to `artifacts/<id>/frozen/<rev>` and records a sha256 for
+  every file. With `--build` it builds twice and refuses to freeze if the output differs. A frozen
+  copy is a scene package, so every command runs on it.
+- `triptych` shows reference | previous | current at the same PTS and crop.
+- `playback` writes synchronized side-by-side video.
+- `jumps` and `frames` check motion over the whole timeline and between reference frames, where an
+  instant switch passes every per-frame check but pops at 60/120 Hz.
+- `attribute` and `profile` find what causes a seam or a line before anyone shades over it.
+
 Other commands: `inspect`, `extract`, `capture`, `compare`, `negatives`, `audit`, `variants`, `perf`, `review`
-([`references/harness.md`](skills/video-to-css/references/harness.md)).
+([`references/harness.md`](skills/video-to-css/references/harness.md)). Lessons from long reconstructions
+(CSS traps, integration, motion, measurement vs acceptance):
+[`references/lessons.md`](skills/video-to-css/references/lessons.md).
 
 ## What fits strict CSS
 
