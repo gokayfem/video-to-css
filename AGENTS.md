@@ -27,7 +27,7 @@ gallery/                      README images (generated from real runs)
 npm run setup          # npm ci + Playwright Chromium and WebKit; ffmpeg/ffprobe must be on PATH
 npm test               # seek correctness, determinism, VFR/rotation/pixel-aspect intake, audit, negative controls, embedding
 npm run build:wind     # regenerate examples/wind-farm/scene from its parts
-npm run check:wind     # needs the clip at fixtures/external/wind-farm/loop_720p.mp4
+npm run check:wind     # reference clip: fixtures/external/wind-farm/loop_720p.mp4
 ```
 
 ## Rules

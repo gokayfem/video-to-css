@@ -50,8 +50,9 @@ Brush texture is approximated by gradient grain, not reproduced. Live playback i
 30 fps; it has not been measured on a real display.
 
 The reference is a Blender render of a still anime painting, made in the author's Video2Nodes project. It is not
-AI-generated footage and not an independent benchmark. The clip itself is not in the repository; its SHA-256 is
-in [`examples/wind-farm/REFERENCE.md`](examples/wind-farm/REFERENCE.md).
+AI-generated footage and not an independent benchmark. The clip is included
+([`fixtures/external/wind-farm/`](fixtures/external/wind-farm/), 3.5 MB), so `npm run check:wind` reruns
+the comparison above.
 
 ## Why
 
